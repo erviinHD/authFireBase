@@ -26,6 +26,7 @@ export class AuthService {
 
   logout() {
     localStorage.removeItem('token');
+    localStorage.removeItem('expire');
   }
 
   login(user: UserModel) {
@@ -75,6 +76,12 @@ export class AuthService {
   saveToken(idToken: string) {
     this.userToken = idToken;
     localStorage.setItem('token', idToken);
+
+    let now = new Date();
+    now.setSeconds(3600);
+
+    localStorage.setItem('expire', now.getTime().toString());
+
   }
 
   getToken() {
@@ -88,7 +95,19 @@ export class AuthService {
   }
 
   isAuthenticate(): boolean {
-    return this.userToken.length > 2
+    if (this.userToken.length < 2) {
+      return false;
+    }
+
+    const expire = Number(localStorage.getItem('expire'));
+    const expireDate = new Date();
+    expireDate.setTime(expire);
+
+    if (expireDate > new Date()) {
+      return true;
+    } else {
+      false;
+    }
   }
 
 }
