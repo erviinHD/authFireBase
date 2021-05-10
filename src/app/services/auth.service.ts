@@ -25,7 +25,7 @@ export class AuthService {
   }
 
   logout() {
-
+    localStorage.removeItem('token');
   }
 
   login(user: UserModel) {
@@ -85,6 +85,10 @@ export class AuthService {
     }
 
     return this.userToken;
+  }
+
+  isAuthenticate(): boolean {
+    return this.userToken.length > 2
   }
 
 }
